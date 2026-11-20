@@ -1,0 +1,13 @@
+<div class="fixed top-5 right-5 z-50 flex flex-col gap-2.5">
+  @for (toast of toaster.toasts(); track toast.id) {
+    <div (click)="toaster.dismiss(toast.id)"
+      [ngClass]="{
+        'from-emerald-600 to-teal-500': toast.type === 'success',
+        'from-rose-600 to-red-500': toast.type === 'error',
+        'from-indigo-900 to-sky-600': toast.type === 'info'
+      }"
+      class="min-w-[260px] cursor-pointer rounded-xl bg-gradient-to-r px-4 py-3 text-sm font-medium text-white shadow-xl shadow-slate-900/15 transition-all duration-200 hover:scale-[1.02] animate-slide-in">
+      {{ toast.text }}
+    </div>
+  }
+</div>

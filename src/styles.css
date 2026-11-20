@@ -1,1 +1,56 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(24px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes floatSlow {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(18px, -22px) scale(1.06);
+    }
+}
+
+.animate-fade-up {
+    animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+    animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-float-delay {
+    animation: floatSlow 10s ease-in-out 2s infinite reverse;
+}
+
+body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+h1, h2, h3, .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
