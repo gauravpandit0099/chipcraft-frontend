@@ -1,1 +1,83 @@
-<p>dashboard works!</p>
+@if (loading()) {
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    @for (i of [1, 2, 3, 4]; track i) {
+      <div class="h-28 rounded-2xl bg-slate-200/70 animate-pulse"></div>
+    }
+  </div>
+} @else if (data(); as d) {
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div
+      class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <p class="theme-text-muted text-xs font-semibold uppercase tracking-wider">Total Revenue</p>
+      <p class="theme-text-main font-display mt-2 text-2xl font-bold">
+        ₹{{ d.stats.total_revenue | number }}
+      </p>
+    </div>
+    <div
+      class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <p class="theme-text-muted text-xs font-semibold uppercase tracking-wider">Total Orders</p>
+      <p class="theme-text-main font-display mt-2 text-2xl font-bold">{{ d.stats.total_orders }}</p>
+    </div>
+    <div
+      class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <p class="theme-text-muted text-xs font-semibold uppercase tracking-wider">Active Gadgets</p>
+      <p class="theme-text-main font-display mt-2 text-2xl font-bold">
+        {{ d.stats.total_products }}
+      </p>
+    </div>
+    <div
+      class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+    >
+      <p class="theme-text-muted text-xs font-semibold uppercase tracking-wider">Out of Stock</p>
+      <p class="mt-2 font-display text-2xl font-bold text-rose-600">
+        {{ d.stats.out_of_stock_count }}
+      </p>
+    </div>
+  </div>
+  <div class="mt-7 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+    <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+      <h2 class="theme-text-main font-display text-base font-bold">Recent Orders</h2>
+      <span class="theme-text-muted text-xs">Latest store activity</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50/80 text-xs uppercase theme-text-muted">
+          <tr>
+            <th class="px-6 py-3 font-semibold">Order</th>
+            <th class="px-6 py-3 font-semibold">Customer</th>
+            <th class="px-6 py-3 font-semibold">Amount</th>
+            <th class="px-6 py-3 font-semibold">Status</th>
+            <th class="px-6 py-3 font-semibold">Date</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (order of d.recent_orders; track order.id) {
+            <tr class="transition-colors hover:bg-slate-50/70">
+              <td class="px-6 py-3.5 font-semibold theme-text-main">{{ order.order_number }}</td>
+              <td class="px-6 py-3.5 theme-text-muted">{{ order.customer_name }}</td>
+              <td class="px-6 py-3.5 font-medium theme-text-main">₹{{ order.total | number }}</td>
+              <td class="px-6 py-3.5">
+                <span
+                  class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                  [ngClass]="{
+                    'bg-amber-50 text-amber-700': order.status === 'Pending',
+                    'bg-sky-50 text-sky-700':
+                      order.status === 'Confirmed' || order.status === 'Shipped',
+                    'bg-emerald-50 text-emerald-700': order.status === 'Delivered',
+                    'bg-rose-50 text-rose-700': order.status === 'Cancelled',
+                  }"
+                >
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-6 py-3.5 theme-text-muted">{{ order.created_at }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
