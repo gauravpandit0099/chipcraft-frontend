@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, AuthData, LoginPayload, RegisterPayload, User } from '../models/auth.model';
 import { ToasterService } from './toaster';
@@ -15,6 +15,7 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private tokenKey = 'gadget_auth_token';
   private userKey = 'gadget_auth_user';
+  loggingOut = signal(false);
 
   /* authenticate user via laravel api */
   login(payload: LoginPayload): Observable<ApiResponse<AuthData>> {
@@ -44,12 +45,17 @@ export class AuthService {
 
   /* revoke token and clear session */
   logout(): void {
+    if (this.loggingOut()) return;
     try {
-      this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+      this.loggingOut.set(true);
+      this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+        finalize(() => this.loggingOut.set(false))
+      ).subscribe({
         next: () => this.clearSession(),
         error: () => this.clearSession()
       });
     } catch {
+      this.loggingOut.set(false);
       this.clearSession();
     }
   }

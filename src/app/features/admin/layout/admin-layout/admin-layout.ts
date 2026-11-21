@@ -13,7 +13,10 @@ import { AuthService } from '../../../../core/services/auth';
 export class AdminLayoutComponent {
   private auth = inject(AuthService);
   sidebarOpen = signal(false);
+  dropdownOpen = signal(false);
+  loggingOut = this.auth.loggingOut;
   adminName = this.auth.getCurrentUser()?.name || 'Admin';
+  currentYear = new Date().getFullYear();
   navItems = [
     { label: 'Dashboard', route: '/admin/dashboard' },
     { label: 'Categories', route: '/admin/categories' },
@@ -27,6 +30,11 @@ export class AdminLayoutComponent {
   /* toggle mobile sidebar drawer */
   toggleSidebar(): void {
     this.sidebarOpen.update((v) => !v);
+  }
+
+  /* toggle topbar profile dropdown */
+  toggleDropdown(): void {
+    this.dropdownOpen.update((v) => !v);
   }
 
   /* logout admin session */
