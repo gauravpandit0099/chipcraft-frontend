@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* centralize all app theme colors here */
+:root {
+    --bg-auth: #020617;
+    --brand-from: #312e81;
+    --brand-via: #1d4ed8;
+    --brand-to: #0ea5e9;
+    --accent-primary: #0284c7;
+    --accent-hover: #3730a3;
+    --accent-soft: #f0f9ff;
+    --surface-card: rgba(255, 255, 255, 0.95);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --toast-success-from: #059669;
+    --toast-success-to: #14b8a6;
+    --toast-error-from: #e11d48;
+    --toast-error-to: #ef4444;
+    --toast-info-from: #312e81;
+    --toast-info-to: #0284c7;
+}
+
 @keyframes fadeUp {
     0% {
         opacity: 0;
@@ -52,5 +72,72 @@
     animation: floatSlow 10s ease-in-out 2s infinite reverse;
 }
 
-body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-h1, h2, h3, .font-display { font-family: 'Space Grotesk', system-ui, sans-serif; }
+/* reusable theme classes */
+.theme-auth-bg {
+    background-color: var(--bg-auth);
+}
+
+.theme-brand-panel {
+    background: linear-gradient(135deg, var(--brand-from), var(--brand-via), var(--brand-to));
+}
+
+.theme-card {
+    background: var(--surface-card);
+}
+
+.theme-text-main {
+    color: var(--text-main);
+}
+
+.theme-text-muted {
+    color: var(--text-muted);
+}
+
+.theme-btn-primary {
+    background: linear-gradient(to right, var(--brand-from), var(--brand-via), var(--brand-to));
+    color: #ffffff;
+}
+
+.theme-input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-primary) 15%, transparent);
+}
+
+.theme-label {
+    color: var(--accent-primary);
+}
+
+.peer:focus~.theme-icon {
+    color: var(--accent-primary);
+}
+
+.theme-link {
+    color: var(--accent-primary);
+}
+
+.theme-link:hover {
+    color: var(--accent-hover);
+}
+
+.theme-toast-success {
+    background: linear-gradient(to right, var(--toast-success-from), var(--toast-success-to));
+}
+
+.theme-toast-error {
+    background: linear-gradient(to right, var(--toast-error-from), var(--toast-error-to));
+}
+
+.theme-toast-info {
+    background: linear-gradient(to right, var(--toast-info-from), var(--toast-info-to));
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+}

@@ -1,74 +1,56 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { ApiResponse, AuthData, LoginPayload, RegisterPayload, User } from '../models/auth.model';
 import { ToasterService } from './toaster';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http = inject(HttpClient);
   private router = inject(Router);
   private toaster = inject(ToasterService);
+  private apiUrl = environment.apiUrl;
   private tokenKey = 'gadget_auth_token';
   private userKey = 'gadget_auth_user';
 
-  /* static login for UI testing */
+  /* authenticate user via laravel api */
   login(payload: LoginPayload): Observable<ApiResponse<AuthData>> {
     try {
-      const isAdmin = payload.email === 'admin@gadgetstore.com' && payload.password === 'admin123';
-      const isUser = payload.email === 'user@gadgetstore.com' && payload.password === 'user123';
-      if (!isAdmin && !isUser) {
-        this.toaster.error('Invalid demo credentials');
-        return throwError(() => new Error('Invalid credentials'));
-      }
-      const user: User = isAdmin
-        ? { id: 1, name: 'Store Admin', email: payload.email, role: 'admin' }
-        : { id: 2, name: 'Demo Customer', email: payload.email, role: 'user' };
-      const res: ApiResponse<AuthData> = {
-        status: true,
-        message: 'Login successful',
-        data: { user, token: 'mock-token' },
-      };
-      this.saveSession(res);
-      return of(res);
+      return this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/login`, payload).pipe(
+        tap((res) => this.saveSession(res)),
+        catchError((err) => this.handleError(err))
+      );
     } catch (err) {
       this.toaster.error('Unexpected login error');
       return throwError(() => err);
     }
   }
 
-  /* static register for UI testing */
+  /* register customer via laravel api */
   register(payload: RegisterPayload): Observable<ApiResponse<AuthData>> {
     try {
-      const user: User = {
-        id: Date.now(),
-        name: payload.name,
-        email: payload.email,
-        role: 'user',
-        phone: payload.phone,
-        address: payload.address,
-      };
-      const res: ApiResponse<AuthData> = {
-        status: true,
-        message: 'Registration successful',
-        data: { user, token: 'mock-token' },
-      };
-      this.saveSession(res);
-      return of(res);
+      return this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/register`, payload).pipe(
+        tap((res) => this.saveSession(res)),
+        catchError((err) => this.handleError(err))
+      );
     } catch (err) {
       this.toaster.error('Unexpected registration error');
       return throwError(() => err);
     }
   }
 
-  /* clear session and redirect */
+  /* revoke token and clear session */
   logout(): void {
     try {
-      localStorage.removeItem(this.tokenKey);
-      localStorage.removeItem(this.userKey);
-      this.toaster.info('Logged out successfully');
-      this.router.navigate(['/login']);
+      this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+        next: () => this.clearSession(),
+        error: () => this.clearSession()
+      });
     } catch {
-      this.toaster.error('Logout failed');
+      this.clearSession();
     }
   }
 
@@ -92,11 +74,30 @@ export class AuthService {
     this.router.navigate([role === 'admin' ? '/admin/dashboard' : '/user/home']);
   }
 
-  /* save token and notify */
+  /* save token and notify user */
   private saveSession(res: ApiResponse<AuthData>): void {
-    localStorage.setItem(this.tokenKey, res.data.token);
-    localStorage.setItem(this.userKey, JSON.stringify(res.data.user));
-    this.toaster.success(res.message);
-    this.redirectByRole(res.data.user.role);
+    if (res.status && res.data) {
+      localStorage.setItem(this.tokenKey, res.data.token);
+      localStorage.setItem(this.userKey, JSON.stringify(res.data.user));
+      this.toaster.success(res.message);
+      this.redirectByRole(res.data.user.role);
+    }
+  }
+
+  /* clear local storage and redirect */
+  private clearSession(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    this.toaster.info('Logged out successfully');
+    this.router.navigate(['/login']);
+  }
+
+  /* extract api or validation error */
+  private handleError(err: HttpErrorResponse): Observable<never> {
+    const firstFieldError = err.error?.errors
+      ? (Object.values(err.error.errors)[0] as string[])?.[0]
+      : null;
+    this.toaster.error(firstFieldError || err.error?.message || 'Request failed');
+    return throwError(() => err);
   }
 }
