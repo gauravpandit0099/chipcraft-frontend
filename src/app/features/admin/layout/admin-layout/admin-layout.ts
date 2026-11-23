@@ -19,7 +19,7 @@ export class AdminLayoutComponent {
   currentYear = new Date().getFullYear();
   navItems = [
     { label: 'Dashboard', route: '/admin/dashboard' },
-    { label: 'Categories', route: '/admin/categories' },
+    { label: 'Categories', route: '/admin/category-list' },
     { label: 'Subcategories', route: '/admin/subcategories' },
     { label: 'Products', route: '/admin/products' },
     { label: 'Orders', route: '/admin/orders' },

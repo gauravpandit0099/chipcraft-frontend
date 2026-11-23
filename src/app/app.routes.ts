@@ -8,12 +8,15 @@ import { AdminLayoutComponent } from './features/admin/layout/admin-layout/admin
 import { DashboardComponent } from './features/admin/dashboard/dashboard';
 import { UserLayoutComponent } from './features/user/layout/user-layout/user-layout';
 import { HomeComponent } from './features/user/home/home';
+import { CategoryListComponent } from './features/admin/category/category-list/category-list';
+import { nonAdminGuard } from './core/guards/non-admin-guard';
 
 /* application routes with role guards */
 export const routes: Routes = [
   {
     path: '',
     component: UserLayoutComponent,
+    canActivate: [nonAdminGuard],
     children: [
       { path: '', component: HomeComponent },
       { path: 'orders', component: HomeComponent, canActivate: [userGuard] },
@@ -31,6 +34,7 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'category-list', component: CategoryListComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

@@ -8,13 +8,11 @@ export interface FeaturedProduct {
   badge?: string;
 }
 
-/* user recent order preview */
-export interface UserOrderPreview {
-  id: number;
-  order_number: string;
-  item_name: string;
-  total: number;
-  status: 'Pending' | 'Confirmed' | 'Shipped' | 'Delivered' | 'Cancelled';
+/* category horizontal product row */
+export interface CategoryProductSection {
+  title: string;
+  slug: string;
+  products: FeaturedProduct[];
 }
 
 /* sale banner announcement */
@@ -23,11 +21,11 @@ export interface SaleBanner {
   title: string;
   subtitle: string;
   cta_text: string;
-}   
+}
 
 /* complete user home payload */
 export interface UserHomeData {
   banners: SaleBanner[];
   featured_products: FeaturedProduct[];
-  recent_orders: UserOrderPreview[];
+  category_sections: CategoryProductSection[];
 }

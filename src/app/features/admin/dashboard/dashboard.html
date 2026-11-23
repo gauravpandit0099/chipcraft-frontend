@@ -1,7 +1,7 @@
 @if (loading()) {
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
     @for (i of [1, 2, 3, 4]; track i) {
-      <div class="h-32 rounded-2xl bg-slate-200/70 animate-pulse"></div>
+      <div class="h-32 rounded-2xl bg-white/10 animate-pulse"></div>
     }
   </div>
 } @else if (data(); as d) {
@@ -11,136 +11,63 @@
       <p class="theme-text-muted text-sm">Live store analytics and order activity</p>
     </div>
 
-    <!-- live kpi cards -->
+    <!-- 4 live kpi cards -->
     <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      <div
-        class="group theme-card rounded-2xl border p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-      >
-        <span
-          class="theme-icon-soft inline-flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-        >
-          <svg
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-            />
+      <div class="group theme-card rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:border-teal-400/40">
+        <span class="theme-icon-soft inline-flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
         </span>
         <p class="theme-text-muted mt-3 text-xs font-medium">Total Sales</p>
-        <p class="theme-text-main font-display mt-1 text-2xl font-bold">
-          ₹{{ d.stats.total_revenue | number }}
-        </p>
-        <p class="mt-1 text-xs font-semibold text-emerald-600">
-          {{ d.stats.total_users }} Customers
-        </p>
+        <p class="theme-text-main font-display mt-1 text-2xl font-bold">₹{{ d.stats.total_revenue | number }}</p>
+        <p class="mt-1 text-xs font-semibold text-teal-300">{{ d.stats.total_users }} Customers</p>
       </div>
 
-      <div
-        class="group theme-card rounded-2xl border p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-      >
-        <span
-          class="theme-icon-soft inline-flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-        >
-          <svg
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 5h12m-8 4a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
-            />
+      <div class="group theme-card rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:border-teal-400/40">
+        <span class="theme-icon-soft inline-flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 5h12m-8 4a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
           </svg>
         </span>
         <p class="theme-text-muted mt-3 text-xs font-medium">Total Orders</p>
-        <p class="theme-text-main font-display mt-1 text-2xl font-bold">
-          {{ d.stats.total_orders }}
-        </p>
+        <p class="theme-text-main font-display mt-1 text-2xl font-bold">{{ d.stats.total_orders }}</p>
         <p class="mt-1 text-xs font-semibold theme-link">Live from MySQL</p>
       </div>
 
-      <div
-        class="group theme-card rounded-2xl border p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-      >
-        <span
-          class="theme-icon-soft inline-flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110"
-        >
-          <svg
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-            />
+      <div class="group theme-card rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:border-teal-400/40">
+        <span class="theme-icon-soft inline-flex h-10 w-10 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
           </svg>
         </span>
         <p class="theme-text-muted mt-3 text-xs font-medium">Total Products</p>
-        <p class="theme-text-main font-display mt-1 text-2xl font-bold">
-          {{ d.stats.total_products }}
-        </p>
-        <p class="mt-1 text-xs font-semibold text-emerald-600">Active gadgets</p>
+        <p class="theme-text-main font-display mt-1 text-2xl font-bold">{{ d.stats.total_products }}</p>
+        <p class="mt-1 text-xs font-semibold text-teal-300">Active gadgets</p>
       </div>
 
-      <div
-        class="group theme-card rounded-2xl border p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-      >
-        <span
-          class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600 transition-transform duration-300 group-hover:scale-110"
-        >
-          <svg
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-            />
+      <div class="group theme-card rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:border-rose-400/40">
+        <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/15 text-rose-400 transition-transform duration-300 group-hover:scale-110">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
           </svg>
         </span>
         <p class="theme-text-muted mt-3 text-xs font-medium">Out of Stock</p>
-        <p class="font-display mt-1 text-2xl font-bold text-rose-600">
-          {{ d.stats.out_of_stock_count }}
-        </p>
-        <p class="mt-1 text-xs font-semibold text-rose-600">Needs restock</p>
+        <p class="font-display mt-1 text-2xl font-bold text-rose-400">{{ d.stats.out_of_stock_count }}</p>
+        <p class="mt-1 text-xs font-semibold text-rose-400">Needs restock</p>
       </div>
     </div>
 
     <!-- graph 1 (sales area) + graph 2 (order status doughnut) -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
-      <div class="theme-card rounded-2xl border p-6 shadow-sm lg:col-span-7">
+      <div class="theme-card rounded-2xl border p-6 lg:col-span-7">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
           <h2 class="theme-text-main font-display text-base font-bold">Sales Overview</h2>
-          <div class="inline-flex rounded-xl bg-slate-100 p-1">
+          <div class="inline-flex rounded-xl bg-white/10 p-1">
             @for (p of periods; track p) {
-              <button
-                type="button"
-                (click)="changePeriod(p)"
-                [ngClass]="
-                  selectedPeriod() === p
-                    ? 'theme-active-nav shadow-sm'
-                    : 'theme-text-muted hover:text-slate-900'
-                "
-                class="rounded-lg px-3 py-1 text-xs font-semibold capitalize transition-all duration-150"
-              >
+              <button type="button" (click)="changePeriod(p)"
+                [ngClass]="selectedPeriod() === p ? 'theme-active-nav shadow-sm' : 'text-slate-300 hover:text-white'"
+                class="rounded-lg px-3 py-1 text-xs font-semibold capitalize transition-all duration-150">
                 {{ p }}
               </button>
             }
@@ -151,10 +78,10 @@
         </div>
       </div>
 
-      <div class="theme-card rounded-2xl border p-6 shadow-sm lg:col-span-5">
+      <div class="theme-card rounded-2xl border p-6 lg:col-span-5">
         <div class="flex items-center justify-between mb-4">
           <h2 class="theme-text-main font-display text-base font-bold">Order Status Breakdown</h2>
-          <!-- <span class="theme-link text-xs font-semibold">{{ d.stats.total_orders }} Total</span> -->
+          <span class="theme-link text-xs font-semibold">{{ d.stats.total_orders }} Total</span>
         </div>
         <div class="relative h-56 w-full">
           <canvas #statusCanvas></canvas>
@@ -164,7 +91,7 @@
 
     <!-- graph 3 (category bar chart) + recent orders table -->
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
-      <div class="theme-card rounded-2xl border p-6 shadow-sm lg:col-span-5">
+      <div class="theme-card rounded-2xl border p-6 lg:col-span-5">
         <div class="flex items-center justify-between mb-4">
           <h2 class="theme-text-main font-display text-base font-bold">Products by Category</h2>
           <span class="theme-text-muted text-xs">Catalog Split</span>
@@ -174,43 +101,32 @@
         </div>
       </div>
 
-      <div class="theme-card rounded-2xl border p-6 shadow-sm lg:col-span-7">
+      <div class="theme-card rounded-2xl border p-6 lg:col-span-7">
         <div class="flex items-center justify-between mb-4">
           <h2 class="theme-text-main font-display text-base font-bold">Recent Orders</h2>
           <span class="theme-link text-xs font-semibold">Latest {{ d.recent_orders.length }}</span>
         </div>
         <div class="space-y-3">
           @for (order of d.recent_orders; track order.id) {
-            <div
-              class="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/60 px-4 py-3 transition-all hover:bg-white hover:shadow-sm"
-            >
+            <div class="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 transition-all hover:bg-white/10">
               <div class="flex items-center gap-3">
-                <span
-                  class="theme-icon-soft flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold"
-                >
+                <span class="theme-icon-soft flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold">
                   {{ order.customer_name.slice(0, 2).toUpperCase() }}
                 </span>
                 <div>
                   <p class="theme-text-main text-sm font-semibold">{{ order.customer_name }}</p>
-                  <p class="theme-text-muted text-xs">
-                    {{ order.order_number }} · {{ order.created_at }}
-                  </p>
+                  <p class="theme-text-muted text-xs">{{ order.order_number }} · {{ order.created_at }}</p>
                 </div>
               </div>
               <div class="text-right">
-                <p class="theme-text-main font-display text-sm font-bold">
-                  ₹{{ order.total | number }}
-                </p>
-                <span
-                  class="inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                <p class="theme-text-main font-display text-sm font-bold">₹{{ order.total | number }}</p>
+                <span class="inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
                   [ngClass]="{
-                    'bg-amber-50 text-amber-700': order.status === 'Pending',
-                    'bg-sky-50 text-sky-700':
-                      order.status === 'Confirmed' || order.status === 'Shipped',
-                    'bg-emerald-50 text-emerald-700': order.status === 'Delivered',
-                    'bg-rose-50 text-rose-700': order.status === 'Cancelled',
-                  }"
-                >
+                    'bg-amber-500/20 text-amber-300': order.status === 'Pending',
+                    'bg-sky-500/20 text-sky-300': order.status === 'Confirmed' || order.status === 'Shipped',
+                    'bg-emerald-500/20 text-emerald-300': order.status === 'Delivered',
+                    'bg-rose-500/20 text-rose-300': order.status === 'Cancelled'
+                  }">
                   {{ order.status }}
                 </span>
               </div>

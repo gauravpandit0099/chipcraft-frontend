@@ -1,0 +1,157 @@
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h1 class="theme-text-main font-display text-2xl font-bold">Categories</h1>
+      <p class="theme-text-muted text-sm">Manage top-level product categories</p>
+    </div>
+    <button type="button" (click)="openCreateModal()"
+      class="theme-btn-primary rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5">
+      + Add Category
+    </button>
+  </div>
+
+  <!-- live onchange search & status filter bar -->
+  <!-- <div class="theme-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-4">
+    <div class="relative flex-1 min-w-[220px] max-w-md">
+      <input type="text" [(ngModel)]="search" (ngModelChange)="onSearchChange()" placeholder="Search category name..."
+        class="theme-input theme-text-main w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-4 py-2 text-sm placeholder-slate-400 outline-none" />
+      <svg class="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+    <select [(ngModel)]="statusFilter" (change)="applyFilters()"
+      class="theme-input theme-text-main rounded-xl border border-white/15 bg-[#162a2e] px-3.5 py-2 text-sm outline-none">
+      <option value="all">All Status</option>
+      <option value="1">Active</option>
+      <option value="0">Inactive</option>
+    </select>
+  </div> -->
+
+  <!-- categories table -->
+  <div class="theme-card overflow-hidden rounded-2xl border">
+    @if (loading()) {
+      <div class="p-6 space-y-3">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="h-12 rounded-xl bg-white/10 animate-pulse"></div>
+        }
+      </div>
+    } @else if (pagination(); as pg) {
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-white/5 text-xs uppercase tracking-wider theme-text-muted">
+            <tr>
+              <th class="px-6 py-3.5 font-semibold">Name</th>
+              <!-- <th class="px-6 py-3.5 font-semibold">Slug</th> -->
+              <th class="px-6 py-3.5 font-semibold">Products</th>
+              <th class="px-6 py-3.5 font-semibold">Status</th>
+              <th class="px-6 py-3.5 text-right font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/10">
+            @for (cat of pg.data; track cat.id) {
+              <tr class="transition-colors hover:bg-white/5">
+                <td class="px-6 py-3.5 font-semibold theme-text-main">{{ cat.name }}</td>
+                <!-- <td class="px-6 py-3.5 theme-text-muted text-xs">{{ cat.slug }}</td> -->
+                <td class="px-6 py-3.5 theme-text-main font-medium">{{ cat.products_count ?? 0 }}</td>
+                <td class="px-6 py-3.5">
+                  <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                    [ngClass]="cat.status ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'">
+                    {{ cat.status ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
+                <td class="px-6 py-3.5 text-right space-x-2">
+                  <button type="button" (click)="openEditModal(cat)"
+                    class="rounded-lg border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold theme-link hover:bg-white/15">
+                    Edit
+                  </button>
+                  <button type="button" (click)="confirmDelete(cat.id)"
+                    class="rounded-lg border border-rose-400/30 bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-300 hover:bg-rose-500/25">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="px-6 py-10 text-center text-sm theme-text-muted">No categories found.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- pagination bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-6 py-3.5 text-xs theme-text-muted">
+        <span>Showing {{ pg.from ?? 0 }}–{{ pg.to ?? 0 }} of {{ pg.total }}</span>
+        <div class="flex items-center gap-1.5">
+          <button type="button" [disabled]="pg.current_page === 1" (click)="loadCategories(pg.current_page - 1)"
+            class="rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-semibold theme-text-main disabled:opacity-40">
+            Prev
+          </button>
+          @for (p of pages; track p) {
+            <button type="button" (click)="loadCategories(p)"
+              [ngClass]="p === pg.current_page ? 'theme-active-nav' : 'bg-white/5 border border-white/15 theme-text-main'"
+              class="rounded-lg px-3 py-1.5 font-semibold transition-all">
+              {{ p }}
+            </button>
+          }
+          <button type="button" [disabled]="pg.current_page === pg.last_page" (click)="loadCategories(pg.current_page + 1)"
+            class="rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-semibold theme-text-main disabled:opacity-40">
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- create / edit modal -->
+@if (modalOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl border border-white/15 bg-[#162a2e] p-6 shadow-2xl animate-fade-up">
+      <h2 class="theme-text-main font-display text-lg font-bold mb-4">
+        {{ editingId() ? 'Edit Category' : 'Add Category' }}
+      </h2>
+      <div class="space-y-4">
+        <div>
+          <label class="theme-text-muted mb-1 block text-xs font-semibold uppercase">Category Name</label>
+          <input type="text" [(ngModel)]="formName" placeholder="e.g. Audio &amp; Headphones"
+            class="theme-input theme-text-main w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm outline-none" />
+        </div>
+        <div class="flex items-center gap-2.5">
+          <input type="checkbox" id="catStatus" [(ngModel)]="formStatus" class="h-4 w-4 rounded" />
+          <label for="catStatus" class="theme-text-main text-sm font-medium">Active Status</label>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end gap-2.5">
+        <button type="button" (click)="modalOpen.set(false)"
+          class="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold theme-text-main">
+          Cancel
+        </button>
+        <button type="button" [disabled]="saving()" (click)="saveCategory()"
+          class="theme-btn-primary rounded-xl px-5 py-2 text-xs font-semibold disabled:opacity-60">
+          {{ saving() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- delete confirmation modal -->
+@if (deleteModalOpen()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-sm rounded-2xl border border-white/15 bg-[#162a2e] p-6 shadow-2xl animate-fade-up">
+      <h2 class="theme-text-main font-display text-lg font-bold">Delete Category?</h2>
+      <p class="theme-text-muted mt-1.5 text-sm">This will permanently remove the category and its linked subcategories.</p>
+      <div class="mt-5 flex justify-end gap-2.5">
+        <button type="button" (click)="deleteModalOpen.set(false)"
+          class="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold theme-text-main">
+          Cancel
+        </button>
+        <button type="button" [disabled]="saving()" (click)="deleteCategory()"
+          class="rounded-xl bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 disabled:opacity-60">
+          {{ saving() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
