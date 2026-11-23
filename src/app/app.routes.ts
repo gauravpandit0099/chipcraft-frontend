@@ -10,6 +10,7 @@ import { UserLayoutComponent } from './features/user/layout/user-layout/user-lay
 import { HomeComponent } from './features/user/home/home';
 import { CategoryListComponent } from './features/admin/category/category-list/category-list';
 import { nonAdminGuard } from './core/guards/non-admin-guard';
+import { SubcategoryListComponent } from './features/admin/subcategory/subcategory-list/subcategory-list';
 
 /* application routes with role guards */
 export const routes: Routes = [
@@ -35,6 +36,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'category-list', component: CategoryListComponent },
+      { path: 'subcategories', component: SubcategoryListComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
