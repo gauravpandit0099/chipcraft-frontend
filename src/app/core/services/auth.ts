@@ -75,9 +75,9 @@ export class AuthService {
     return !!localStorage.getItem(this.tokenKey) && !!this.getCurrentUser();
   }
 
-  /* redirect user by role */
+/* redirect user by role */
   redirectByRole(role: 'admin' | 'user'): void {
-    this.router.navigate([role === 'admin' ? '/admin/dashboard' : '/user/home']);
+    this.router.navigate([role === 'admin' ? '/admin/dashboard' : '/']);
   }
 
   /* save token and notify user */

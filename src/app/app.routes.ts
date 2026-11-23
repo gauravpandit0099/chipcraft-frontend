@@ -6,13 +6,25 @@ import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { AdminLayoutComponent } from './features/admin/layout/admin-layout/admin-layout';
 import { DashboardComponent } from './features/admin/dashboard/dashboard';
-import { Home } from './features/user/home/home';
+import { UserLayoutComponent } from './features/user/layout/user-layout/user-layout';
+import { HomeComponent } from './features/user/home/home';
 
 /* application routes with role guards */
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: '',
+    component: UserLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'orders', component: HomeComponent, canActivate: [userGuard] },
+      { path: 'wishlist', component: HomeComponent, canActivate: [userGuard] },
+      { path: 'cart', component: HomeComponent, canActivate: [userGuard] },
+    ],
+  },
   { path: 'login', component: Login, canActivate: [guestGuard] },
   { path: 'register', component: Register, canActivate: [guestGuard] },
+
+  /* admin routes */
   {
     path: 'admin',
     component: AdminLayoutComponent,
@@ -22,6 +34,5 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
-  { path: 'user/home', component: Home, canActivate: [userGuard] },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: '' },
 ];
