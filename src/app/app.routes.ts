@@ -11,6 +11,8 @@ import { HomeComponent } from './features/user/home/home';
 import { CategoryListComponent } from './features/admin/category/category-list/category-list';
 import { nonAdminGuard } from './core/guards/non-admin-guard';
 import { SubcategoryListComponent } from './features/admin/subcategory/subcategory-list/subcategory-list';
+import { ProductListComponent } from './features/admin/product/product-list/product-list';
+import { ProductFormComponent } from './features/admin/product/product-form/product-form';
 
 /* application routes with role guards */
 export const routes: Routes = [
@@ -37,6 +39,12 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'category-list', component: CategoryListComponent },
       { path: 'subcategories', component: SubcategoryListComponent },
+
+      /* product routes */
+      { path: 'products', component: ProductListComponent },
+      { path: 'products/create', component: ProductFormComponent },
+      { path: 'products/edit/:id', component: ProductFormComponent },
+
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
