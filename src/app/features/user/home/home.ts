@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserHomeService } from '../../../core/services/user-home';
 import { ToasterService } from '../../../core/services/toaster';
-import { UserHomeData } from '../../../core/models/user-home.model';
+import { SaleBanner, UserHomeData } from '../../../core/models/user-home.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -15,12 +16,18 @@ import { UserHomeData } from '../../../core/models/user-home.model';
 export class HomeComponent implements OnInit, OnDestroy {
   private homeService = inject(UserHomeService);
   private toaster = inject(ToasterService);
+  storageUrl = environment.apiUrl.replace('/api', '');
   data = signal<UserHomeData | null>(null);
   loading = signal(true);
   activeSlide = signal(0);
   private sliderTimer: ReturnType<typeof setInterval> | null = null;
+  banners: SaleBanner[] = [
+    { badge: 'Featured Electronics Sale', title: 'Upgrade Your Tech. Smarter. Faster.', subtitle: 'Discover flagship mobiles, audio gear, and laptops with unbeatable deals.', cta_text: 'Shop Now' },
+    { badge: 'New Launch', title: 'Pulse Watch X — Track Every Beat.', subtitle: 'AMOLED display, 10-day battery life, and precision health sensors.', cta_text: 'Explore Wearables' },
+    { badge: 'Flash Offer · Code CHIP15', title: 'Flat 15% Off on GaN Fast Chargers.', subtitle: 'Power laptops and phones at blazing speed with compact GaN tech.', cta_text: 'Grab the Deal' }
+  ];
 
-  /* load storefront home data */
+  /* load live storefront home data */
   ngOnInit(): void {
     try {
       this.homeService.getHomeData().subscribe({
@@ -41,16 +48,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.sliderTimer) clearInterval(this.sliderTimer);
   }
 
+  /* truncate long product name */
+  truncateName(name: string, limit = 26): string {
+    return name.length > limit ? name.slice(0, limit) + '...' : name;
+  }
+
   /* move to next banner slide */
   nextSlide(): void {
-    const len = this.data()?.banners.length || 1;
-    this.activeSlide.update((i) => (i + 1) % len);
+    this.activeSlide.update((i) => (i + 1) % this.banners.length);
   }
 
   /* move to previous banner slide */
   prevSlide(): void {
-    const len = this.data()?.banners.length || 1;
-    this.activeSlide.update((i) => (i - 1 + len) % len);
+    this.activeSlide.update((i) => (i - 1 + this.banners.length) % this.banners.length);
   }
 
   /* jump to specific banner dot */

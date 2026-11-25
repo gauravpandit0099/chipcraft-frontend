@@ -1,18 +1,18 @@
-/* storefront product card item */
-export interface FeaturedProduct {
+import { Product } from './product.model';
+
+/* storefront category item */
+export interface StorefrontCategory {
   id: number;
   name: string;
-  category: string;
-  price: number;
-  in_stock: boolean;
-  badge?: string;
+  slug: string;
 }
 
 /* category horizontal product row */
 export interface CategoryProductSection {
+  id: number;
   title: string;
   slug: string;
-  products: FeaturedProduct[];
+  products: Product[];
 }
 
 /* sale banner announcement */
@@ -25,7 +25,7 @@ export interface SaleBanner {
 
 /* complete user home payload */
 export interface UserHomeData {
-  banners: SaleBanner[];
-  featured_products: FeaturedProduct[];
+  categories: StorefrontCategory[];
+  featured_products: Product[];
   category_sections: CategoryProductSection[];
 }

@@ -13,6 +13,7 @@ import { nonAdminGuard } from './core/guards/non-admin-guard';
 import { SubcategoryListComponent } from './features/admin/subcategory/subcategory-list/subcategory-list';
 import { ProductListComponent } from './features/admin/product/product-list/product-list';
 import { ProductFormComponent } from './features/admin/product/product-form/product-form';
+import { UserProductListComponent } from './features/user/product-list/product-list';
 
 /* application routes with role guards */
 export const routes: Routes = [
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'orders', component: HomeComponent, canActivate: [userGuard] },
       { path: 'wishlist', component: HomeComponent, canActivate: [userGuard] },
       { path: 'cart', component: HomeComponent, canActivate: [userGuard] },
+      { path: 'products', component: UserProductListComponent },
     ],
   },
   { path: 'login', component: Login, canActivate: [guestGuard] },
