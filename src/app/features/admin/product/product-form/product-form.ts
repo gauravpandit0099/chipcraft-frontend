@@ -26,7 +26,7 @@ export class ProductFormComponent implements OnInit {
   private subService = inject(AdminSubcategoryService);
   private toaster = inject(ToasterService);
 
-  storageUrl = environment.apiUrl.replace('/api', '/storage');
+  storageUrl = environment.apiUrl.replace('/api', '');
   editingId = signal<number | null>(null);
   saving = signal(false);
   categories = signal<Category[]>([]);

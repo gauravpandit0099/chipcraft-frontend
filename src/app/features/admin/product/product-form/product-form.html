@@ -63,7 +63,7 @@
         <label class="theme-text-muted mb-2 block text-xs font-semibold uppercase">Cover Image</label>
         <label class="flex h-44 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-white/20 bg-white/5 transition-all hover:border-teal-400/50">
           @if (coverPreview()) {
-            <img [src]="coverPreview()" alt="Cover preview" class="h-full w-full object-cover" />
+            <img [src]="coverPreview()" alt="Cover preview" class="h-full w-full object-contain p-2" />
           } @else {
             <span class="theme-text-muted text-xs font-semibold">Click to upload cover image</span>
           }

@@ -30,7 +30,7 @@
   </div>
 
   <!-- products table -->
-  <div class="theme-card overflow-hidden rounded-2xl border">
+  <div class="theme-card rounded-2xl border overflow-visible">
     @if (loading()) {
       <div class="p-6 space-y-3">
         @for (i of [1, 2, 3, 4]; track i) {
@@ -38,7 +38,7 @@
         }
       </div>
     } @else if (pagination(); as pg) {
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto overflow-y-visible">
         <table class="w-full text-left text-sm">
           <thead class="bg-white/5 text-xs uppercase tracking-wider theme-text-muted">
             <tr>
@@ -55,36 +55,62 @@
                 <td class="px-6 py-3.5">
                   <div class="flex items-center gap-3">
                     @if (prod.image) {
-                      <img [src]="storageUrl + '/' + prod.image" [alt]="prod.name" class="h-11 w-11 rounded-xl object-cover border border-white/15" />
+                      <img [src]="storageUrl + '/' + prod.image" [alt]="prod.name"
+                        class="h-12 w-12 shrink-0 rounded-xl object-contain bg-white/10 p-1 border border-white/15" />
                     } @else {
-                      <div class="theme-icon-soft flex h-11 w-11 items-center justify-center rounded-xl text-xs font-bold">IMG</div>
+                      <div class="theme-icon-soft flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xs font-bold">IMG</div>
                     }
-                    <div>
-                      <p class="font-semibold theme-text-main">{{ prod.name }}</p>
+                    <div class="relative group">
+                      <p class="font-semibold theme-text-main cursor-default whitespace-nowrap">
+                        {{ truncateName(prod.name, 25) }}
+                      </p>
+                      @if (prod.name.length > 25) {
+                        <div class="pointer-events-none absolute left-0 bottom-full z-40 mb-2 hidden w-72 rounded-xl border border-white/15 bg-[#0f1d20] px-3 py-2 text-xs font-medium text-white shadow-2xl group-hover:block">
+                          {{ prod.name }}
+                        </div>
+                      }
                       <p class="text-xs theme-text-muted">{{ prod.gallery_images?.length || 0 }} gallery images</p>
                     </div>
                   </div>
                 </td>
-                <td class="px-6 py-3.5">
+                <td class="px-6 py-3.5 whitespace-nowrap">
                   <span class="theme-icon-soft rounded-lg px-2.5 py-0.5 text-xs font-semibold">{{ prod.category?.name }}</span>
                   <span class="ml-1.5 text-xs theme-text-muted">/ {{ prod.subcategory?.name }}</span>
                 </td>
-                <td class="px-6 py-3.5 font-display font-bold theme-text-main">₹{{ prod.price | number }}</td>
-                <td class="px-6 py-3.5">
+                <td class="px-6 py-3.5 font-display font-bold theme-text-main whitespace-nowrap">₹{{ prod.price | number }}</td>
+                <td class="px-6 py-3.5 whitespace-nowrap">
                   <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold"
                     [ngClass]="prod.in_stock ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'">
                     {{ prod.in_stock ? 'In Stock' : 'Out of Stock' }}
                   </span>
                 </td>
-                <td class="px-6 py-3.5 text-right space-x-2">
-                  <a [routerLink]="['/admin/products/edit', prod.id]"
-                    class="inline-block rounded-lg border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold theme-link hover:bg-white/15">
-                    Edit
-                  </a>
-                  <button type="button" (click)="confirmDelete(prod.id)"
-                    class="rounded-lg border border-rose-400/30 bg-rose-500/15 px-3 py-1 text-xs font-semibold text-rose-300 hover:bg-rose-500/25">
-                    Delete
-                  </button>
+                <td class="px-6 py-3.5 text-right whitespace-nowrap">
+                  <div class="relative inline-block text-left">
+                    <button type="button" (click)="toggleActionMenu(prod.id)"
+                      class="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold theme-text-main transition-all hover:bg-white/15">
+                      <span>Actions</span>
+                      <svg class="h-3.5 w-3.5 transition-transform duration-150" [class.rotate-180]="openMenuId() === prod.id" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    @if (openMenuId() === prod.id) {
+                      <div class="absolute right-0 z-50 mt-2 w-36 overflow-hidden rounded-xl border border-white/15 bg-[#132326] py-1 shadow-2xl animate-fade-up">
+                        <button type="button" (click)="openViewModal(prod)"
+                          class="flex w-full items-center gap-2 px-3.5 py-2 text-left text-xs font-semibold text-teal-300 transition-colors hover:bg-white/10">
+                          View
+                        </button>
+                        <a [routerLink]="['/admin/products/edit', prod.id]" (click)="openMenuId.set(null)"
+                          class="flex w-full items-center gap-2 px-3.5 py-2 text-left text-xs font-semibold theme-text-main transition-colors hover:bg-white/10">
+                          Edit
+                        </a>
+                        <button type="button" (click)="confirmDelete(prod.id)"
+                          class="flex w-full items-center gap-2 px-3.5 py-2 text-left text-xs font-semibold text-rose-400 transition-colors hover:bg-rose-500/15">
+                          Delete
+                        </button>
+                      </div>
+                    }
+                  </div>
                 </td>
               </tr>
             } @empty {
@@ -120,6 +146,83 @@
     }
   </div>
 </div>
+
+<!-- view product details dialog -->
+@if (viewModalOpen() && viewingProduct(); as vp) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/15 bg-[#162a2e] p-6 shadow-2xl animate-fade-up">
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <span class="theme-icon-soft rounded-lg px-2.5 py-0.5 text-xs font-semibold">
+            {{ vp.category?.name }} / {{ vp.subcategory?.name }}
+          </span>
+          <h2 class="theme-text-main font-display mt-2 text-xl font-bold">{{ vp.name }}</h2>
+        </div>
+        <button type="button" (click)="viewModalOpen.set(false)"
+          class="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs font-bold theme-text-main hover:bg-white/10">
+          ✕
+        </button>
+      </div>
+
+      <div class="mt-5 grid grid-cols-1 gap-6 md:grid-cols-12">
+        <!-- main preview + gallery thumbnails -->
+        <div class="space-y-3 md:col-span-5">
+          <div class="flex h-52 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-white/5 p-3">
+            @if (activePreviewImage()) {
+              <img [src]="activePreviewImage()" [alt]="vp.name" class="h-full w-full object-contain" />
+            } @else {
+              <span class="theme-text-muted text-xs">No image</span>
+            }
+          </div>
+          <div class="flex flex-wrap gap-2">
+            @if (vp.image) {
+              <button type="button" (click)="activePreviewImage.set(storageUrl + '/' + vp.image)"
+                class="h-12 w-12 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-1 hover:border-teal-400">
+                <img [src]="storageUrl + '/' + vp.image" class="h-full w-full object-contain" />
+              </button>
+            }
+            @for (img of vp.gallery_images || []; track img) {
+              <button type="button" (click)="activePreviewImage.set(storageUrl + '/' + img)"
+                class="h-12 w-12 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-1 hover:border-teal-400">
+                <img [src]="storageUrl + '/' + img" class="h-full w-full object-contain" />
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- product specs & description -->
+        <div class="flex flex-col justify-between space-y-4 md:col-span-7">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="font-display text-2xl font-bold theme-text-main">₹{{ vp.price | number }}</span>
+              <span class="rounded-full px-3 py-0.5 text-xs font-semibold"
+                [ngClass]="vp.in_stock ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'">
+                {{ vp.in_stock ? 'In Stock' : 'Out of Stock' }}
+              </span>
+            </div>
+            <div>
+              <p class="theme-text-muted text-xs font-semibold uppercase tracking-wider mb-1">Description</p>
+              <p class="theme-text-main text-sm leading-relaxed max-h-40 overflow-y-auto">
+                {{ vp.description || 'No description provided for this product.' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-2.5 border-t border-white/10 pt-4">
+            <button type="button" (click)="viewModalOpen.set(false)"
+              class="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold theme-text-main">
+              Close
+            </button>
+            <a [routerLink]="['/admin/products/edit', vp.id]" (click)="viewModalOpen.set(false)"
+              class="theme-btn-primary rounded-xl px-4 py-2 text-xs font-semibold">
+              Edit Product
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
 
 <!-- delete confirmation modal -->
 @if (deleteModalOpen()) {

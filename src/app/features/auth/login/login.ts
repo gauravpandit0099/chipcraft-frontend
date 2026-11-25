@@ -40,7 +40,7 @@ export class Login {
   /* fill demo credentials */
   fillDemo(role: 'admin' | 'user'): void {
     this.form = role === 'admin'
-      ? { email: 'admin@gadgetstore.com', password: 'admin123' }
-      : { email: 'user@gadgetstore.com', password: 'user123' };
+      ? { email: 'admin@chipcraft.com', password: 'admin123' }
+      : { email: 'customer@chipcraft.com', password: 'user123' };
   }
 }

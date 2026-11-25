@@ -21,7 +21,7 @@ export class ProductListComponent implements OnInit {
   private productService = inject(AdminProductService);
   private categoryService = inject(AdminCategoryService);
   private toaster = inject(ToasterService);
-  storageUrl = environment.apiUrl.replace('/api', '/storage');
+  storageUrl = environment.apiUrl.replace('/api', '');
   pagination = signal<PaginatedResponse<Product> | null>(null);
   categories = signal<Category[]>([]);
   loading = signal(true);
@@ -46,6 +46,29 @@ export class ProductListComponent implements OnInit {
       error: () => {}
     });
     this.loadProducts();
+  }
+
+  openMenuId = signal<number | null>(null);
+  viewModalOpen = signal(false);
+  viewingProduct = signal<Product | null>(null);
+  activePreviewImage = signal<string | null>(null);
+
+  /* truncate long product name */
+  truncateName(name: string, limit = 25): string {
+    return name.length > limit ? name.slice(0, limit) + '...' : name;
+  }
+
+  /* toggle row action dropdown */
+  toggleActionMenu(id: number): void {
+    this.openMenuId.update((cur) => (cur === id ? null : id));
+  }
+
+  /* open product detail preview modal */
+  openViewModal(prod: Product): void {
+    this.openMenuId.set(null);
+    this.viewingProduct.set(prod);
+    this.activePreviewImage.set(prod.image ? `${this.storageUrl}/${prod.image}` : null);
+    this.viewModalOpen.set(true);
   }
 
   /* build category filter dropdown options */

@@ -33,7 +33,7 @@ export class AdminProductService {
   /* fetch single product detail */
   getProduct(id: number): Observable<ApiResponse<Product>> {
     try {
-      return this.http.get<ApiResponse<Product>>(`${this.baseUrl}/products/${id}`).pipe(
+      return this.http.get<ApiResponse<Product>>(`${this.baseUrl}/product-detail/${id}`).pipe(
         catchError((err) => this.handleError(err))
       );
     } catch (err) {
