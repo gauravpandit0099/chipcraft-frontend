@@ -57,7 +57,7 @@
       </div>
     </div>
 
-    <!-- right column: cover & gallery images -->
+    <!-- cover & gallery images -->
     <div class="theme-card space-y-5 rounded-2xl border p-6 lg:col-span-5">
       <div>
         <label class="theme-text-muted mb-2 block text-xs font-semibold uppercase">Cover Image</label>
@@ -78,11 +78,23 @@
           <input type="file" accept="image/*" multiple (change)="onGallerySelect($event)" class="hidden" />
         </label>
         <div class="mt-3 grid grid-cols-4 gap-2.5">
-          @for (img of existingGallery(); track img) {
-            <img [src]="img" class="h-16 w-full rounded-xl object-cover border border-white/15" />
+          @for (img of existingGallery(); track img.path; let i = $index) {
+            <div class="group relative h-16 overflow-hidden rounded-xl border border-white/15 bg-white/5">
+              <img [src]="img.url" class="h-full w-full object-contain p-1" />
+              <button type="button" (click)="removeExistingGallery(i)" title="Remove image"
+                class="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-600 text-[10px] font-bold text-white shadow hover:bg-rose-700">
+                ✕
+              </button>
+            </div>
           }
-          @for (img of galleryPreviews(); track img) {
-            <img [src]="img" class="h-16 w-full rounded-xl object-cover border border-teal-400/50" />
+          @for (img of galleryPreviews(); track img; let i = $index) {
+            <div class="group relative h-16 overflow-hidden rounded-xl border border-teal-400/50 bg-white/5">
+              <img [src]="img" class="h-full w-full object-contain p-1" />
+              <button type="button" (click)="removeNewGallery(i)" title="Remove image"
+                class="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-600 text-[10px] font-bold text-white shadow hover:bg-rose-700">
+                ✕
+              </button>
+            </div>
           }
         </div>
       </div>

@@ -42,7 +42,8 @@ export class ProductFormComponent implements OnInit {
   coverPreview = signal<string | null>(null);
   galleryFiles: File[] = [];
   galleryPreviews = signal<string[]>([]);
-  existingGallery = signal<string[]>([]);
+  existingGallery = signal<{ path: string; url: string }[]>([]);
+  removedGalleryPaths: string[] = [];
 
   /* initialize dropdowns and edit product */
   ngOnInit(): void {
@@ -93,6 +94,20 @@ export class ProductFormComponent implements OnInit {
     this.galleryPreviews.update((list) => [...list, ...files.map((f) => URL.createObjectURL(f))]);
   }
 
+  /* mark existing gallery image for removal */
+  removeExistingGallery(index: number): void {
+    const item = this.existingGallery()[index];
+    if (!item) return;
+    this.removedGalleryPaths.push(item.path);
+    this.existingGallery.update((list) => list.filter((_, i) => i !== index));
+  }
+
+  /* remove newly selected gallery image */
+  removeNewGallery(index: number): void {
+    this.galleryFiles.splice(index, 1);
+    this.galleryPreviews.update((list) => list.filter((_, i) => i !== index));
+  }
+
   /* submit product form data */
   saveProduct(): void {
     try {
@@ -113,6 +128,7 @@ export class ProductFormComponent implements OnInit {
       fd.append('in_stock', this.inStock ? '1' : '0');
       if (this.coverFile) fd.append('cover_image', this.coverFile);
       this.galleryFiles.forEach((file) => fd.append('gallery_images[]', file));
+      this.removedGalleryPaths.forEach((path) => fd.append('removed_gallery_images[]', path));
 
       this.saving.set(true);
       const id = this.editingId();
@@ -143,7 +159,9 @@ export class ProductFormComponent implements OnInit {
         this.onCategoryChange(p.category_id);
         this.subcategoryId = p.subcategory_id;
         if (p.image) this.coverPreview.set(`${this.storageUrl}/${p.image}`);
-        this.existingGallery.set((p.gallery_images || []).map((g) => `${this.storageUrl}/${g}`));
+        this.existingGallery.set(
+          (p.gallery_images || []).map((g) => ({ path: g, url: `${this.storageUrl}/${g}` }))
+        );
       },
       error: () => this.router.navigate(['/admin/products'])
     });
