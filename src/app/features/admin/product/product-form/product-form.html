@@ -55,6 +55,31 @@
         <textarea [(ngModel)]="description" rows="4" placeholder="Key specs, battery life, warranty..."
           class="theme-input theme-text-main w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm outline-none"></textarea>
       </div>
+
+      <div>
+        <label class="theme-text-muted mb-2 block text-xs font-semibold uppercase">Specifications (Key / Value)</label>
+        <div class="space-y-2.5">
+          @for (spec of specifications; track $index; let i = $index; let last = $last) {
+            <div class="flex items-start gap-2.5">
+              <input type="text" [(ngModel)]="spec.key" placeholder="Key (e.g. Battery Life)"
+                class="theme-input theme-text-main w-2/5 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm outline-none" />
+              <textarea [(ngModel)]="spec.value" rows="1" placeholder="Value (e.g. Up to 12 hours)"
+                class="theme-input theme-text-main flex-1 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm outline-none resize-y"></textarea>
+              @if (last) {
+                <button type="button" (click)="addSpecRow()" title="Add specification"
+                  class="theme-btn-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg font-bold shadow-sm transition-all hover:scale-105">
+                  +
+                </button>
+              } @else {
+                <button type="button" (click)="removeSpecRow(i)" title="Remove specification"
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-rose-400/30 bg-rose-500/15 text-sm font-bold text-rose-300 transition-all hover:bg-rose-500/25">
+                  ✕
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
     <!-- cover & gallery images -->

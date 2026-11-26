@@ -10,6 +10,7 @@ import { Category } from '../../../../core/models/category.model';
 import { Subcategory } from '../../../../core/models/subcategory.model';
 import { SearchableSelectComponent, SelectOption } from '../../../../shared/components/searchable-select/searchable-select';
 import { environment } from '../../../../../environments/environment';
+import { ProductSpec } from '../../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-form',
@@ -25,6 +26,7 @@ export class ProductFormComponent implements OnInit {
   private categoryService = inject(AdminCategoryService);
   private subService = inject(AdminSubcategoryService);
   private toaster = inject(ToasterService);
+  specifications: ProductSpec[] = [{ key: '', value: '' }];
 
   storageUrl = environment.apiUrl.replace('/api', '');
   editingId = signal<number | null>(null);
@@ -119,6 +121,10 @@ export class ProductFormComponent implements OnInit {
         this.toaster.error('Cover image is required');
         return;
       }
+      const cleanSpecs = this.specifications
+        .filter((s) => s.key.trim() && s.value.trim())
+        .map((s) => ({ key: s.key.trim(), value: s.value.trim() }));
+
       const fd = new FormData();
       fd.append('category_id', String(this.categoryId));
       fd.append('subcategory_id', String(this.subcategoryId));
@@ -126,6 +132,7 @@ export class ProductFormComponent implements OnInit {
       fd.append('description', this.description.trim());
       fd.append('price', String(this.price));
       fd.append('in_stock', this.inStock ? '1' : '0');
+      fd.append('specifications', JSON.stringify(cleanSpecs));
       if (this.coverFile) fd.append('cover_image', this.coverFile);
       this.galleryFiles.forEach((file) => fd.append('gallery_images[]', file));
       this.removedGalleryPaths.forEach((path) => fd.append('removed_gallery_images[]', path));
@@ -158,6 +165,9 @@ export class ProductFormComponent implements OnInit {
         this.categoryId = p.category_id;
         this.onCategoryChange(p.category_id);
         this.subcategoryId = p.subcategory_id;
+        this.specifications = p.specifications?.length
+          ? p.specifications.map((s) => ({ key: s.key, value: s.value }))
+          : [{ key: '', value: '' }];
         if (p.image) this.coverPreview.set(`${this.storageUrl}/${p.image}`);
         this.existingGallery.set(
           (p.gallery_images || []).map((g) => ({ path: g, url: `${this.storageUrl}/${g}` }))
@@ -165,5 +175,19 @@ export class ProductFormComponent implements OnInit {
       },
       error: () => this.router.navigate(['/admin/products'])
     });
+  }
+
+  /* add empty specification row */
+  addSpecRow(): void {
+    this.specifications.push({ key: '', value: '' });
+  }
+
+  /* remove specification row */
+  removeSpecRow(index: number): void {
+    if (this.specifications.length === 1) {
+      this.specifications[0] = { key: '', value: '' };
+      return;
+    }
+    this.specifications.splice(index, 1);
   }
 }

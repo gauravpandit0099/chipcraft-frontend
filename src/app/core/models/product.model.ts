@@ -1,3 +1,9 @@
+/* key-value specification row */
+export interface ProductSpec {
+  key: string;
+  value: string;
+}
+
 /* product entity interface */
 export interface Product {
   id: number;
@@ -12,4 +18,5 @@ export interface Product {
   gallery_images?: string[];
   category?: { id: number; name: string };
   subcategory?: { id: number; name: string };
+  specifications?: ProductSpec[];
 }
